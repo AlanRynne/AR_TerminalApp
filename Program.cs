@@ -1,5 +1,9 @@
 ﻿using System;
-using AR_Lib;
+using System.Diagnostics;
+using System.Collections.Generic;
+using AR_Lib.Geometry;
+using AR_Lib.HalfEdgeMesh;
+using AR_Lib.IO;
 
 namespace AR_TerminalApp
 {
@@ -7,7 +11,23 @@ namespace AR_TerminalApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            string path = args[0];
+            OFFMeshData data;
+            OFFResult result = OFFReader.ReadMeshFromFile(path, out data);
+            Debug.WriteLine("OFFReader result: " + result + "\n");
+
+
+            HE_Mesh mesh = new HE_Mesh(data.vertices, data.faces);
+            Debug.Write(mesh);
+
+            foreach (HE_Vertex v in mesh.Vertices)
+            {
+                List<HE_Vertex> vertices = v.adjacentVertices();
+                List<HE_Edge> edges = v.adjacentEdges();
+                List<HE_Face> faces = v.adjacentFaces();
+
+                Debug.WriteLine("ADJACENT: V " + vertices.Count + " F " + faces.Count + " E " + edges.Count);
+            }        
         }
     }
 }
