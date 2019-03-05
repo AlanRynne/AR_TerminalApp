@@ -27,7 +27,10 @@ namespace AR_TerminalApp
                 List<HE_Face> faces = v.adjacentFaces();
 
                 Debug.WriteLine("ADJACENT: V " + vertices.Count + " F " + faces.Count + " E " + edges.Count);
-            }        
+            }
+            
+            HE_MeshTopology top = new HE_MeshTopology(mesh);
+            top.computeVertexAdjacency();
         }
     }
 }
