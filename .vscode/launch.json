@@ -11,7 +11,7 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/netcoreapp2.1/AR_TerminalApp.dll",
-            "args": ["/Users/alan/Desktop/AR_GeometryLibrary/AR_TerminalApp/meshes/cube.off"],
+            "args": ["meshes/cube.off"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "internalConsole",
