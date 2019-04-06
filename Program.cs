@@ -20,6 +20,10 @@ namespace AR_TerminalApp
 
             TestMatrix();
 
+            Settings set = SettingsReader.ReadSettings();
+            Console.WriteLine("----- ReadSettings Test Started -----");
+            Console.WriteLine(set.Constants.Tolerance);
+
         }
 
         public static void TestMatrix()
