@@ -2,11 +2,16 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Collections.Generic;
+
+using AR_Lib;
+
 using AR_Lib.Geometry;
 using AR_Lib.HalfEdgeMesh;
 using AR_Lib.IO;
 using AR_Lib.Curve;
-using AR_Lib;
+using AR_Lib.Geometry.Nurbs;
+using AR_Lib.Collections;
+using System.IO;
 
 namespace AR_TerminalApp
 {
@@ -20,15 +25,69 @@ namespace AR_TerminalApp
 
             TestMatrix();
 
-            Settings set = SettingsReader.ReadSettings();
-            Console.WriteLine("----- ReadSettings Test Started -----");
-            Console.WriteLine(set.Constants.Tolerance);
+            TestNurbsSurface();
 
+            Debug.WriteLine("---- FINISH -----");
+
+        }
+
+        public static void TestNurbsSurface()
+        {
+            Stopwatch stp = new Stopwatch();
+
+            Random rnd = new Random();
+
+            Debug.WriteLine("----- TestNurbsSurface Test Started -----");
+            stp.Start();
+            int gridsize = 20;
+            List<Point4d> pts = new List<Point4d>(16);
+            List<double> tmp = new List<double>();
+
+            for (int i = 0; i < gridsize; i++)
+            {
+                for (int j = 0; j < gridsize; j++)
+                {
+                    pts.Add(new Point4d(i * 1000, j * 1000, Math.Sqrt(i * j) * 10, 1));
+                    tmp.Add((double)j);
+
+                }
+            }
+
+            // List<double> uKnts = new List<double> { 0, 0, 0, 0, 0.33, 0.33, 0.33, 0.33, 0.66, 0.66, 0.66, 0.66, 1, 1, 1, 1 };
+            // List<double> vKnts = new List<double> { 0, 0, 0, 0, 0.33, 0.33, 0.33, 0.33, 0.66, 0.66, 0.66, 0.66, 1, 1, 1, 1 };
+            List<double> uKnts = tmp;
+            List<double> vKnts = tmp;
+
+            Surface a = new Surface(1, 1, gridsize, gridsize, pts, uKnts, vKnts, 40, 40);
+            a.TessellateSurface();
+            Debug.WriteLine(a);
+            stp.Stop();
+
+            Debug.WriteLine("Execution time: " + stp.Elapsed);
+
+            File.WriteAllText("surfPoints.txt", "");
+
+            using (StreamWriter sw = new StreamWriter("/Users/alan/Desktop/AR_GeometryLibrary/AR_TerminalApp/surfPoints.txt"))
+            {
+                foreach (Point3d pt in a.PVertices)
+                {
+                    sw.WriteLine(pt.X + "; " + pt.Y + "; " + pt.Z);
+                }
+            }
+
+
+        }
+
+        public static void TestReadSettings()
+        {
+            Settings set = SettingsReader.ReadSettings();
+            Debug.WriteLine("----- ReadSettings Test Started -----");
+            Debug.WriteLine(set.Constants.Tolerance);
         }
 
         public static void TestMatrix()
         {
-            Console.WriteLine("---- TestMatrix() called ----");
+            Debug.WriteLine("---- TestMatrix() called ----");
 
             Matrix<Point3d> matrix = new Matrix<Point3d>(2);
             matrix[0, 0] = new Point3d(5, 6, 8);
@@ -36,16 +95,16 @@ namespace AR_TerminalApp
             matrix[1, 1] = new Point3d(5, 5.22, 8);
             matrix[1, 0] = new Point3d(5, 6, 4.218);
 
-            Console.WriteLine("Matrix[0,0] => " + matrix[0, 0]);
-            Console.WriteLine("Matrix[0,1] => " + matrix[0, 1]);
-            Console.WriteLine("Matrix[1,0] => " + matrix[1, 0]);
-            Console.WriteLine("Matrix[1,1] => " + matrix[1, 1]);
+            Debug.WriteLine("Matrix[0,0] => " + matrix[0, 0]);
+            Debug.WriteLine("Matrix[0,1] => " + matrix[0, 1]);
+            Debug.WriteLine("Matrix[1,0] => " + matrix[1, 0]);
+            Debug.WriteLine("Matrix[1,1] => " + matrix[1, 1]);
 
-            Console.WriteLine("---- TestMatrix() ended ----");
+            Debug.WriteLine("---- TestMatrix() ended ----");
         }
         public static void TestHalfEdgeMesh(string path)
         {
-            Console.WriteLine("---- TestHalfEdgeMesh() called ----");
+            Debug.WriteLine("---- TestHalfEdgeMesh() called ----");
 
             OFFMeshData data;
             OFFResult result = OFFReader.ReadMeshFromFile(path, out data);
@@ -74,7 +133,7 @@ namespace AR_TerminalApp
             Line levelLine;
             AR_Lib.Curve.LevelSets.getFaceLevel("set1", 3.5, mesh.Faces[0], out levelLine);
 
-            Console.WriteLine("---- TestHalfEdgeMesh() ended ----");
+            Debug.WriteLine("---- TestHalfEdgeMesh() ended ----");
 
         }
     }
