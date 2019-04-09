@@ -9,7 +9,7 @@ using AR_Lib.Geometry;
 using AR_Lib.HalfEdgeMesh;
 using AR_Lib.IO;
 using AR_Lib.Curve;
-using AR_Lib.Geometry.Nurbs;
+using AR_Lib.Geometry;
 using AR_Lib.Collections;
 using System.IO;
 
