@@ -69,7 +69,7 @@ namespace AR_TerminalApp
 
             using (StreamWriter sw = new StreamWriter("/Users/alan/Desktop/AR_GeometryLibrary/AR_TerminalApp/surfPoints.txt"))
             {
-                foreach (Point3d pt in a.PVertices)
+                foreach (Point3d pt in a.Vertices)
                 {
                     sw.WriteLine(pt.X + "; " + pt.Y + "; " + pt.Z);
                 }
