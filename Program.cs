@@ -9,7 +9,6 @@ using AR_Lib.Geometry;
 using AR_Lib.HalfEdgeMesh;
 using AR_Lib.IO;
 using AR_Lib.Curve;
-using AR_Lib.Geometry;
 using AR_Lib.Collections;
 using System.IO;
 
@@ -131,7 +130,7 @@ namespace AR_TerminalApp
 
 
             Line levelLine;
-            AR_Lib.Curve.LevelSets.getFaceLevel("set1", 3.5, mesh.Faces[0], out levelLine);
+            AR_Lib.Curve.LevelSets.GetFaceLevel("set1", 3.5, mesh.Faces[0], out levelLine);
 
             Debug.WriteLine("---- TestHalfEdgeMesh() ended ----");
 
