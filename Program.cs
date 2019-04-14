@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reflection;
 using System.Collections.Generic;
-
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using AR_Lib;
-
+using AR_Lib.Collections;
+using AR_Lib.Curve;
 using AR_Lib.Geometry;
 using AR_Lib.HalfEdgeMesh;
 using AR_Lib.IO;
-using AR_Lib.Curve;
-using AR_Lib.Collections;
-using System.IO;
 
 namespace AR_TerminalApp
 {
@@ -18,13 +16,14 @@ namespace AR_TerminalApp
     {
         static void Main(string[] args)
         {
-            string path = args[0];
 
-            TestHalfEdgeMesh(path);
+            // TestHalfEdgeMesh(args[0]);
 
-            TestMatrix();
+            // TestMatrix();
 
-            TestNurbsSurface();
+            // TestNurbsSurface();
+
+            TestLineLine();
 
             Debug.WriteLine("---- FINISH -----");
 
@@ -74,14 +73,32 @@ namespace AR_TerminalApp
                 }
             }
 
+        }
+
+        public static void TestLineLine()
+        {
+            AR_Lib.Settings.ModifyTolerance(0.00000000001);
+            double num = 0.5;
+            Line lineA = new Line(new Point3d(-num, 0, 0), new Point3d(num, 0, 0));
+            num += 0.3;
+            Line lineB = new Line(new Point3d(2, num + 0.4, 0), new Point3d(-1.2345, -num - 0.1, 0));
+
+            AR_Lib.Intersect3D.IRLineLine result;
+            Debug.WriteLine(AR_Lib.Intersect3D.LineLine(lineA, lineB, out result));
+            Debug.WriteLine(result.pointA);
+            Debug.WriteLine(result.pointB);
+            Debug.WriteLine(result.tA);
+            Debug.WriteLine(result.tB);
+            Debug.WriteLine(result.Distance);
 
         }
 
         public static void TestReadSettings()
         {
             Settings set = SettingsReader.ReadSettings();
+
             Debug.WriteLine("----- ReadSettings Test Started -----");
-            Debug.WriteLine(set.Constants.Tolerance);
+            Debug.WriteLine(Settings.Tolerance);
         }
 
         public static void TestMatrix()
@@ -109,7 +126,6 @@ namespace AR_TerminalApp
             OFFResult result = OFFReader.ReadMeshFromFile(path, out data);
             Debug.WriteLine("OFFReader result: " + result + "\n");
 
-
             HE_Mesh mesh = new HE_Mesh(data.vertices, data.faces);
             Debug.WriteLine(mesh);
 
@@ -127,7 +143,6 @@ namespace AR_TerminalApp
             mesh.Faces[0].HalfEdge.Vertex.UserValues.Add("set1", 3);
             mesh.Faces[0].HalfEdge.Next.Vertex.UserValues.Add("set1", 4);
             mesh.Faces[0].HalfEdge.Next.Next.Vertex.UserValues.Add("set1", 3);
-
 
             Line levelLine;
             AR_Lib.Curve.LevelSets.GetFaceLevel("set1", 3.5, mesh.Faces[0], out levelLine);
